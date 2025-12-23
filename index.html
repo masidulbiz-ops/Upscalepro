@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upscale Pro - HQ Image Enhancement</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-image"></i> Image Upscale Pro</h1>
+            <p class="subtitle">Enhance image quality with AI-powered upscaling, sharpness, and noise reduction</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-area" id="dropArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Drag & Drop Images or Folders</h3>
+                    <p>Supports JPG, PNG, WebP, BMP (Max 50 images, 10MB each)</p>
+                    <input type="file" id="fileInput" multiple accept="image/*" webkitdirectory directory>
+                    <label for="fileInput" class="btn-primary">
+                        <i class="fas fa-folder-open"></i> Choose Folder
+                    </label>
+                    <label for="singleFileInput" class="btn-secondary">
+                        <i class="fas fa-file-image"></i> Choose Files
+                    </label>
+                    <input type="file" id="singleFileInput" multiple accept="image/*">
+                </div>
+                
+                <div class="file-list" id="fileList">
+                    <h3>Selected Files (<span id="fileCount">0</span>)</h3>
+                    <div class="files-container" id="filesContainer">
+                        <p class="empty-message">No files selected yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Controls Section -->
+            <section class="controls-section">
+                <h2><i class="fas fa-sliders-h"></i> Enhancement Controls</h2>
+                
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="upscaleFactor">
+                            <i class="fas fa-expand-alt"></i> Upscale Factor
+                            <span id="upscaleValue">2x</span>
+                        </label>
+                        <input type="range" id="upscaleFactor" min="1" max="4" step="1" value="2">
+                        <div class="scale-options">
+                            <button class="scale-option" data-value="2">2x</button>
+                            <button class="scale-option" data-value="3">3x</button>
+                            <button class="scale-option" data-value="4">4x</button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="sharpness">
+                            <i class="fas fa-crosshairs"></i> Sharpness
+                            <span id="sharpnessValue">50</span>
+                        </label>
+                        <input type="range" id="sharpness" min="0" max="100" value="50">
+                        <div class="value-display">
+                            <span>Soft</span>
+                            <span>Normal</span>
+                            <span>Sharp</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="noiseReduction">
+                            <i class="fas fa-wave-square"></i> Noise Reduction
+                            <span id="noiseValue">30</span>
+                        </label>
+                        <input type="range" id="noiseReduction" min="0" max="100" value="30">
+                        <div class="value-display">
+                            <span>Low</span>
+                            <span>Medium</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advanced-controls">
+                    <h3><i class="fas fa-cog"></i> Advanced Settings</h3>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="preserveDetails" checked>
+                            <i class="fas fa-info-circle"></i> Preserve Details
+                        </label>
+                        <label>
+                            <input type="checkbox" id="removeJPEGArtifacts">
+                            <i class="fas fa-brush"></i> Remove JPEG Artifacts
+                        </label>
+                        <label>
+                            <input type="checkbox" id="autoEnhance" checked>
+                            <i class="fas fa-magic"></i> Auto-Enhance Colors
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Processing Section -->
+            <section class="processing-section">
+                <div class="process-header">
+                    <h2><i class="fas fa-play-circle"></i> Process Images</h2>
+                    <div class="format-select">
+                        <label for="outputFormat">Output Format:</label>
+                        <select id="outputFormat">
+                            <option value="png">PNG (Lossless)</option>
+                            <option value="jpg" selected>JPEG (High Quality)</option>
+                            <option value="webp">WebP (Modern)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="processBtn" class="btn-process">
+                    <i class="fas fa-bolt"></i> Start Upscaling
+                </button>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-info">
+                        <span id="progressText">Ready to process</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                </div>
+                
+                <div class="batch-controls">
+                    <button id="selectAll" class="btn-small">
+                        <i class="fas fa-check-square"></i> Select All
+                    </button>
+                    <button id="clearAll" class="btn-small">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection">
+                <h2><i class="fas fa-images"></i> Results</h2>
+                <div class="results-grid" id="resultsGrid">
+                    <div class="empty-results">
+                        <i class="fas fa-image"></i>
+                        <p>Processed images will appear here</p>
+                    </div>
+                </div>
+                <div class="results-actions">
+                    <button id="downloadAll" class="btn-download" disabled>
+                        <i class="fas fa-download"></i> Download All
+                    </button>
+                    <button id="clearResults" class="btn-clear">
+                        <i class="fas fa-times"></i> Clear Results
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Image Upscale Pro • Uses AI-powered enhancement algorithms • All processing done locally in browser</p>
+            <p class="footer-note">
+                <i class="fas fa-shield-alt"></i> Your images are never uploaded to any server
+            </p>
+        </footer>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="comparison-container">
+                <div class="comparison-box">
+                    <h4>Original</h4>
+                    <img id="originalPreview" src="" alt="Original">
+                    <p class="image-info" id="originalInfo"></p>
+                </div>
+                <div class="comparison-box">
+                    <h4>Upscaled</h4>
+                    <img id="upscaledPreview" src="" alt="Upscaled">
+                    <p class="image-info" id="upscaledInfo"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.15.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/upscaler@1.0.0-beta.14/dist/upscaler.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
